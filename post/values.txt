@@ -1,0 +1,1 @@
+Timestamp=1616574345|Voltage=10.00|Current=0.90|Temperature=37.08

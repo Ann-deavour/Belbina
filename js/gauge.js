@@ -1,442 +1,328 @@
-let motorSamplePath = 'https://freesound.org/data/previews/127/127980_2335231-lq.ogg';
+﻿$(document).ready(function(){
 
-// METER
+    populateValues();
 
-let Meter = function Meter($elm, config) {
 
-  // DOM
-  let $needle, $value;
+var allText;
+var volt,curr,temp;
 
-  // Others
+function readTextFile(file)
+{
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.setRequestHeader('Cache-Control', 'no-cache');
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                allText = rawFile.responseText;
+                console.log(allText);
+            }
+        }
+    }
+    rawFile.send(null);
+}
 
-  let steps = (config.valueMax - config.valueMin) / config.valueStep,
-  angleStep = (config.angleMax - config.angleMin) / steps;
+var timerID = setInterval(function() {
+populateValues();
+}, 5 * 1000);
 
-  let margin = 10; // in %
-  let angle = 0; // in degrees
+//clearInterval(timerID);
 
-  let value2angle = function (value) {
-    let angle = value / (config.valueMax - config.valueMin) * (config.angleMax - config.angleMin) + config.angleMin;
+function populateValues(){
 
-    return angle;
-  };
+readTextFile("./post/values.txt");
+var values = allText.split("|");
+var v = values[1];
+var c = values[2];
+var t = values[3];
+console.log(v);
+console.log(c);
+console.log(t);
+var voltageArr = v.split("=");
+volt = voltageArr[1];
+var currentArr = c.split("=");
+curr = currentArr[1];
+var temperatureArr = t.split("=");
+temp = temperatureArr[1];
 
-  this.setValue = function (v) {
-    $needle.style.transform = "translate3d(-50%, 0, 0) rotate(" + Math.round(value2angle(v)) + "deg)";
-    $value.innerHTML = config.needleFormat(v);
-  };
 
-  let switchLabel = function (e) {
-    e.target.closest(".meter").classList.toggle('meter--big-label');
-  };
+var v_thrshld=15,C_thrshld=1,T_thrshld=50;
+if(volt>v_thrshld||curr>C_thrshld||temp>T_thrshld )
+{
+  savevalues(volt,curr,temp);
+}
 
-  let makeElement = function (parent, className, innerHtml, style) {
+console.log(volt);
+console.log(curr);
+console.log(temp);
 
-    let e = document.createElement('div');
-    e.className = className;
+//document.getElementById("voltage").innerHTML = voltage;
+//document.getElementById("current").innerHTML = current;
+//document.getElementById("temperature").innerHTML = temperature;
 
-    if (innerHtml) {
-      e.innerHTML = innerHtml;
+}
+
+function savevalues(voltage,current,temperature){
+
+  var firebaseConfig = {
+   apiKey: "AIzaSyAmuSBs6E4VTH1lYj7qTptiRZr98433xhs",
+   authDomain: "b2v2-6cab7.firebaseapp.com",
+   databaseURL: "https://b2v2-6cab7-default-rtdb.firebaseio.com",
+   projectId: "b2v2-6cab7",
+   storageBucket: "b2v2-6cab7.appspot.com",
+   messagingSenderId: "295423585757",
+   appId: "1:295423585757:web:1d6398fe1865086c295a34",
+   measurementId: "G-660CQ1MCR9"
+ };
+    console.log("Initializing firebase");
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+
+    // Getting a reference to the database service
+    var database = firebase.database();
+
+
+
+var timestamp=Date().substr(0,25);
+         var db = firebase.firestore();
+         var WirelessMonitor = db.collection('WirelessMonitor');
+
+
+db.collection("WirelessMonitor").doc("Monitor").set({
+
+  Current: temperature,
+ Temperature: voltage,
+ TimeStamp:timestamp,
+ Voltage: current
+})
+  .then(function() {
+    console.log("Document successfully written!");
+  })
+  .catch(function(error) {
+    console.error("Error writing document: ", error);
+});
+
+}
+
+    // Cache some selectors
+
+    var voltage = $('#voltage'),
+        alarm = voltage.find('.alarm'),
+        ampm = voltage.find('.ampm');
+
+        var current = $('#current'),
+            alarm1 = current.find('.alarm'),
+            ampm1 = current.find('.ampm');
+
+            var temperature = $('#temperature'),
+                alarm2 = temperature.find('.alarm'),
+                ampm2 = temperature.find('.ampm');
+
+    // Map digits to their names (this will be an array)
+    var digit_to_name = 'zero one two three four five six seven eight nine'.split(' ');
+
+    // This object will hold the digit elements
+    var digits = {};
+    var digits1 = {};
+    var digits2 = {};
+
+    // Positions for the hours, minutes, and seconds
+    var positions = [
+        'h1', 'h2', ':', 'm1', 'm2'
+    ];
+
+    // Generate the digits with the needed markup,
+    // and add them to the voltage
+
+    var digit_holder = voltage.find('.digits');
+    var digit_holder1 = current.find('.digits');
+    var digit_holder2 = temperature.find('.digits');
+
+    $.each(positions, function(){
+
+        if(this == ':'){
+            digit_holder.append('<div class="dots">');
+        }
+        else{
+
+            var pos = $('<div>');
+
+            for(var i=1; i<8; i++){
+                pos.append('<span class="d' + i + '">');
+            }
+
+            // Set the digits as key:value pairs in the digits object
+            digits[this] = pos;
+
+            // Add the digit elements to the page
+            digit_holder.append(pos);
+        }
+
+    });
+
+    $.each(positions, function(){
+
+    if(this == ':'){
+        digit_holder1.append('<div class="dots">');
+    }
+    else{
+
+        var pos1 = $('<div>');
+
+        for(var i=1; i<8; i++){
+            pos1.append('<span class="d' + i + '">');
+        }
+
+        // Set the digits as key:value pairs in the digits object
+        digits1[this] = pos1;
+
+        // Add the digit elements to the page
+        digit_holder1.append(pos1);
     }
 
-    if (style) {
-      for (var prop in style) {
-        e.style[prop] = style[prop];
+    });
+
+
+    $.each(positions, function(){
+
+    if(this == ':'){
+        digit_holder2.append('<div class="dots">');
+    }
+    else{
+
+        var pos2 = $('<div>');
+
+        for(var i=1; i<8; i++){
+            pos2.append('<span class="d' + i + '">');
+        }
+
+        // Set the digits as key:value pairs in the digits object
+        digits2[this] = pos2;
+
+        // Add the digit elements to the page
+        digit_holder2.append(pos2);
+    }
+
+    });
+
+
+    // Add the weekday names
+
+    // var weekday_names = 'MON TUE WED THU FRI SAT SUN'.split(' '),
+    //     weekday_holder = voltage.find('.weekdays');
+    //
+    // $.each(weekday_names, function(){
+    //     weekday_holder.append('<span>' + this + '</span>');
+    // });
+    //
+    // var weekdays = voltage.find('.weekdays span');
+
+    weekday_holder = voltage.find('.weekdays');
+    weekday_holder.append('<span>' + "Voltage" + '</span>');
+    weekday_holder1 = current.find('.weekdays');
+    weekday_holder1.append('<span>' + "Current" + '</span>');
+    weekday_holder2 = temperature.find('.weekdays');
+    weekday_holder2.append('<span>' + "Temperature" + '</span>');
+
+
+    // Run a timer every second and update the voltage
+
+    (function update_time(){
+
+        // Use moment.js to output the current time as a string
+        // hh is for the hours in 12-hour format,
+        // mm - minutes, ss-seconds (all with leading zeroes),
+        // d is for day of week and A is for AM/PM
+
+        //var now = moment().format("hhmmssdA");
+        var vol = volt.split("");
+        var cur = curr.split("");
+        var tem = temp.split("");
+	console.log("Voltage Length = "+vol.length);
+        if(vol.length < 5){
+        digits.h1.attr('class', digit_to_name[0]);
+        digits.h2.attr('class', digit_to_name[vol[0]]);
+        digits.m1.attr('class', digit_to_name[vol[1]]);
+        digits.m2.attr('class', digit_to_name[vol[3]]);
+        }else{
+        digits.h1.attr('class', digit_to_name[vol[0]]);
+        digits.h2.attr('class', digit_to_name[vol[1]]);
+        digits.m1.attr('class', digit_to_name[vol[3]]);
+        digits.m2.attr('class', digit_to_name[vol[4]]);
+        }
+
+
+      if(cur.length < 5){
+        if(cur[0] == '-'){
+        digits1.h1.attr('class', "minus");
+        digits1.h2.attr('class', digit_to_name[cur[1]]);
+        digits1.m1.attr('class', digit_to_name[cur[3]]);
+        }else{
+	  digits1.h1.attr('class', '');
+          digits1.h2.attr('class', digit_to_name[cur[0]]);
+          digits1.m1.attr('class', digit_to_name[cur[2]]);
+          digits1.m2.attr('class', digit_to_name[cur[3]]);
+        }
+      }else{
+        if(cur[0] == '-'){
+        digits1.h1.attr('class', "minus");
+        digits1.h2.attr('class', digit_to_name[cur[1]]);
+        digits1.m1.attr('class', digit_to_name[cur[3]]);
+        digits1.m2.attr('class', digit_to_name[cur[4]]);
+        }else{
+          digits1.h1.attr('class', digit_to_name[cur[0]]);
+          digits1.h2.attr('class', digit_to_name[cur[1]]);
+          digits1.m1.attr('class', digit_to_name[cur[3]]);
+          digits1.m2.attr('class', digit_to_name[cur[4]]);
+        }
       }
-    }
 
-    parent.appendChild(e);
 
-    return e;
-  };
 
-  // Label unit
-  makeElement($elm, "label label-unit", config.valueUnit);
+        digits2.h1.attr('class', digit_to_name[tem[0]]);
+        digits2.h2.attr('class', digit_to_name[tem[1]]);
+        digits2.m1.attr('class', digit_to_name[tem[3]]);
+        digits2.m2.attr('class', digit_to_name[tem[4]]);
+        // digits2.s1.attr('class', digit_to_name[now[4]]);
+        // digits2.s2.attr('class', digit_to_name[now[5]]);
 
-  for (let n = 0; n < steps + 1; n++) {
-    let value = config.valueMin + n * config.valueStep;
-    angle = config.angleMin + n * angleStep;
 
-    // Graduation numbers
+        // The library returns Sunday as the first day of the week.
+        // Stupid, I know. Lets shift all the days one position down,
+        // and make Sunday last
 
-    // Red zone
-    let redzoneClass = "";
-    if (value > config.valueRed) {
-      redzoneClass = " redzone";
-    }
+        // var dow = now[6];
+        // dow--;
+        //
+        // // Sunday!
+        // if(dow < 0){
+        //     // Make it last
+        //     dow = 6;
+        // }
+        //
+        // // Mark the active day of the week
+        // weekdays.removeClass('active').eq(dow).addClass('active');
 
-    makeElement($elm, "grad grad--" + n + redzoneClass, config.labelFormat(value), {
-      left: 50 - (50 - margin) * Math.sin(angle * (Math.PI / 180)) + "%",
-      top: 50 + (50 - margin) * Math.cos(angle * (Math.PI / 180)) + "%" });
+        // Set the am/pm text:
+        ampm.text("V");
+        ampm1.text("A");
+        ampm2.text("°C");
 
+        // Schedule this function to be run again in 1 sec
+        setTimeout(update_time, 1000);
 
-    // Tick
-    makeElement($elm, "grad-tick grad-tick--" + n + redzoneClass, "", {
-      left: 50 - 50 * Math.sin(angle * (Math.PI / 180)) + "%",
-      top: 50 + 50 * Math.cos(angle * (Math.PI / 180)) + "%",
-      transform: "translate3d(-50%, 0, 0) rotate(" + (angle + 180) + "deg)" });
+    })();
 
+    // Switch the theme
 
-    // Half ticks
-    angle += angleStep / 2;
-
-    if (angle < config.angleMax) {
-      makeElement($elm, "grad-tick grad-tick--half grad-tick--" + n + redzoneClass, "", {
-        left: 50 - 50 * Math.sin(angle * (Math.PI / 180)) + "%",
-        top: 50 + 50 * Math.cos(angle * (Math.PI / 180)) + "%",
-        transform: "translate3d(-50%, 0, 0) rotate(" + (angle + 180) + "deg)" });
-
-    }
-
-    // Quarter ticks
-    angle += angleStep / 4;
-
-    if (angle < config.angleMax) {
-      makeElement($elm, "grad-tick grad-tick--quarter grad-tick--" + n + redzoneClass, "", {
-        left: 50 - 50 * Math.sin(angle * (Math.PI / 180)) + "%",
-        top: 50 + 50 * Math.cos(angle * (Math.PI / 180)) + "%",
-        transform: "translate3d(-50%, 0, 0) rotate(" + (angle + 180) + "deg)" });
-
-    }
-
-    angle -= angleStep / 2;
-
-    if (angle < config.angleMax) {
-      makeElement($elm, "grad-tick grad-tick--quarter grad-tick--" + n + redzoneClass, "", {
-        left: 50 - 50 * Math.sin(angle * (Math.PI / 180)) + "%",
-        top: 50 + 50 * Math.cos(angle * (Math.PI / 180)) + "%",
-        transform: "translate3d(-50%, 0, 0) rotate(" + (angle + 180) + "deg)" });
-
-    }
-  }
-
-  // NEEDLE
-
-  angle = value2angle(config.value);
-
-  $needle = makeElement($elm, "needle", "", {
-    transform: "translate3d(-50%, 0, 0) rotate(" + angle + "deg)" });
-
-
-  let $axle = makeElement($elm, "needle-axle").addEventListener("click", switchLabel);
-  makeElement($elm, "label label-value", "<div>" + config.labelFormat(config.value) + "</div>" + "<span>" + config.labelUnit + "</span>").addEventListener("click", switchLabel);
-
-  $value = $elm.querySelector(".label-value div");
-};
-
-
-// DOM LOADED FIESTA
-
-document.addEventListener("DOMContentLoaded", function () {
-
-  let rpmMeter = new Meter(document.querySelector(".meter--rpm"), {
-    value: 6.3,
-    valueMin: 0,
-    valueMax: 8000,
-    valueStep: 1000,
-    valueUnit: "<div>RPM</div><span>x1000</span>",
-    angleMin: 30,
-    angleMax: 330,
-    labelUnit: "RPM",
-    labelFormat: function (v) {return Math.round(v / 1000);},
-    needleFormat: function (v) {return Math.round(v / 100) * 100;},
-    valueRed: 6500 });
-
-
-  let speedMeter = new Meter(document.querySelector(".meter--speed"), {
-    value: 203,
-    valueMin: 0,
-    valueMax: 220,
-    valueStep: 20,
-    valueUnit: "<span>Speed</span><div>Km/h</div>",
-    angleMin: 30,
-    angleMax: 330,
-    labelUnit: "Km/h",
-    labelFormat: function (v) {return Math.round(v);},
-    needleFormat: function (v) {return Math.round(v);} });
-
-
-  let gearMeter = document.querySelector('.meter--gear div');
-
-  // USER INPUTS
-
-  document.onkeydown = keyDown;
-  document.onkeyup = keyUp;
-
-  function keyDown(e) {
-
-    e = e || window.event;
-
-    if (e.keyCode == '38') {// up arrow
-      isAccelerating = true;
-    } else
-    if (e.keyCode == '40') {// down arrow
-      isBraking = true;
-    } else
-    if (e.keyCode == '37') {// left arrow
-    } else
-    if (e.keyCode == '39') {// right arrow
-    }
-
-  }
-
-  function keyUp(e) {
-
-    e = e || window.event;
-
-    if (e.keyCode == '38') {// up arrow
-      isAccelerating = false;
-    } else
-    if (e.keyCode == '40') {// down arrow
-      isBraking = false;
-    } else
-    if (e.keyCode == '37') {// left arrow
-      gearDown();
-    } else
-    if (e.keyCode == '39') {// right arrow
-      gearUp();
-    }
-
-  }
-
-  function gearUp() {
-    if (gear < gears.length - 1) {
-      gear++;
-      gearMeter.innerHTML = gear;
-    }
-  }
-
-  function gearDown() {
-    if (gear > 1) {
-      gear--;
-      gearMeter.innerHTML = gear;
-    }
-  }
-
-
-  // VEHICLE CONFIG
-
-  let
-  mass = 1000,
-  cx = 0.28,
-  gears = [0, 0.4, 0.7, 1.0, 1.3, 1.5, 1.68],
-  transmitionRatio = 0.17,
-  transmitionLoss = 0.15,
-  wheelDiameter = 0.5,
-  brakeTorqueMax = 300,
-
-  gear = 1,
-  speed = 10, // in km/h
-  overallRatio,
-  wheelRpm,
-  wheelTorque,
-  brakeTorque,
-  resistance,
-  acceleration;
-
-  // MOTOR CONFIG
-
-  let
-  rpmIdle = 1200,
-  rpmMax = 8000,
-  rpmRedzone = 6500,
-  torqueMin = 20, // in m.kg
-  torqueMax = 45, // in m.kg
-
-  torque,
-  rpm = 0,
-  isAccelerating = false,
-  isBraking = false;
-
-
-  // Helper functions
-
-  let torqueByRpm = function (rpm) {
-    let torque = torqueMin + rpm / rpmMax * (torqueMax - torqueMin);
-    return torque;
-  };
-
-  function kmh2ms(speed) {// Km/h to m/s
-    return speed / 3.6;
-  }
-
-  // Physics 101
-  /*
-   * P = C w
-   * P(hp) = C(m.kg) w(rpm) / 716
-   *
-   * F = m.a
-   * Force(newton) = mass(kg) * acceleration (m/s)
-   *
-   * a = Cr / (r.m)
-   * acceleration (m/s) = torqueWheel (m.kg) / (wheelRadius (m) * mass (kg))
-   */
-
-  let lastTime = new Date().getTime(),
-  nowTime,
-  delta;
-
-
-  // MAIN LOOP
-
-  (function loop() {
-    window.requestAnimationFrame(loop);
-
-    // Delta time
-    nowTime = new Date().getTime();
-    delta = (nowTime - lastTime) / 1000; // in seconds
-    lastTime = nowTime;
-
-    let oldSpeed = speed,
-    oldRpm = rpm;
-
-    // Torque
-
-    if (isAccelerating && rpm < rpmMax) {// Gas!
-      torque = torqueByRpm(rpm);
-
-    } else {
-      torque = -(rpm * rpm / 1000000);
-    }
-
-    if (isBraking) {// Ooops...
-      brakeTorque = brakeTorqueMax;
-    } else {
-      brakeTorque = 0;
-    }
-
-
-    overallRatio = transmitionRatio * gears[gear];
-    wheelTorque = torque / overallRatio - brakeTorque;
-
-    acceleration = 20 * wheelTorque / (wheelDiameter * mass / 2);
-    resistance = 0.5 * 1.2 * cx * kmh2ms(speed) ^ 2;
-
-    // Speed
-
-    speed += (acceleration - resistance) * delta;
-
-
-    if (speed < 0) {speed = 0;}
-
-    wheelRpm = speed / (60 * (Math.PI * wheelDiameter / 1000));
-    rpm = speed / (60 * transmitionRatio * gears[gear] * (Math.PI * wheelDiameter / 1000));
-
-    // Idle
-    if (rpm < rpmIdle) {
-      rpm = oldRpm;
-      speed = oldSpeed;
-    }
-
-    // Gear shifter
-    if (rpm > rpmRedzone) {
-      gearMeter.classList.add('redzone');
-
-    } else {
-      gearMeter.classList.remove('redzone');
-    }
-
-    // Update GUI
-
-    speedMeter.setValue(speed);
-    rpmMeter.setValue(rpm);
-
-    // Update engine sound
-    if (source) {
-      source.playbackRate.value = rpm / 4000;
-    }
-
-    if (source2) {
-      source2.playbackRate.value = speed / 500;
-    }
-
-  })();
-
-  ///////////////////////////////////////////////
-  // WEBAUDIO
-
-  // Courtesy of https://mdn.github.io/decode-audio-data/
-
-  // define variables
-
-  var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  var source, source2,
-  gainNode;
-  var songLength;
-
-  var loader = document.querySelector('.loader');
-  var btnVolume = document.querySelector('.btn-volume');
-
-  // use XHR to load an audio track, and
-  // decodeAudioData to decode it and stick it in a buffer.
-  // Then we put the buffer into the source
-
-  function getData() {
-    source = audioCtx.createBufferSource();
-    source2 = audioCtx.createBufferSource();
-    let request = new XMLHttpRequest();
-
-    request.open('GET', motorSamplePath, true);
-    request.responseType = 'arraybuffer';
-
-    request.onload = function () {
-      var audioData = request.response;
-
-      audioCtx.decodeAudioData(audioData, function (buffer) {
-        let myBuffer = buffer; // local buffer ?
-        let myBuffer2 = buffer;
-        //				songLength = buffer.duration; // in seconds
-        source.buffer = myBuffer;
-        source2.buffer = myBuffer2;
-
-        source.loop = true;
-        source2.loop = true;
-
-        // Hacky granular engine sound!
-        source.loopStart = 0.1; // Tune this
-        source.loopEnd = 0.1735; // Tune this
-
-        source2.loopStart = 0.605;
-        source2.loopEnd = 0.650;
-
-        source.playbackRate.value = 1;
-        source2.playbackRate.value = 1;
-
-        // Create a gain node.
-        gainNode = audioCtx.createGain();
-        // Connect the source to the gain node.
-        source.connect(gainNode);
-        source2.connect(gainNode);
-        // Connect the gain node to the destination.
-        gainNode.connect(audioCtx.destination);
-
-        // Remove loader
-        loader.classList.remove('active');
-      },
-
-      function (e) {"Error with decoding audio data" + e.err;});
-    };
-
-    request.send();
-  }
-
-  // wire up buttons
-
-  btnVolume.onclick = function () {
-    this.classList.toggle('active');
-
-    if (this.classList.contains('active')) {
-      gainNode.gain.value = 1;
-    } else {
-      gainNode.gain.value = 0;
-    }
-  };
-
-  // Load the sample
-  getData();
-  // Launch loop playing
-  source.start(0);
-  source2.start(0);
-
+    $('a.button').click(function(){
+        voltage.toggleClass('light dark');
+        current.toggleClass('light dark');
+        temperature.toggleClass('light dark');
+    });
 
 });

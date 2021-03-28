@@ -2,35 +2,63 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
 
+    <!-- JavaScript Includes -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.0.0/moment.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+
+   <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-database.js"></script>
+
+   <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-firestore.js"></script>
+
+   <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+   <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-analytics.js"></script>
+
+   <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-storage.js"></script>
       <link rel="stylesheet" href="css/gauge.css">
-      <script src="js/gauge.js" charset="utf-8"></script>
+      <script src="js/gauge.js"></script>
+
 
   </head>
 
   <body>
 
-<div class="head">
-	<h1>Monitoring Distribution Transformer</h1>
+<div class="flex-container">
+    <div id="voltage" class="light">
+    		<div class="display">
+			<div class="weekdays"></div>
+    			<div class="digits"></div>
+            		<div class="ampm"></div>
+    			</div>
+    		</div>
+
+        <div id="current" class="light">
+              <div class="display">
+		<div class="weekdays"></div>
+                <div class="digits"></div>
+                <div class="ampm"></div>
+              </div>
+            </div>
+
+
+            <div id="temperature" class="light">
+                  <div class="display">
+		    <div class="weekdays"></div>
+                    <div class="digits"></div>
+                    <div class="ampm"></div>
+                  </div>
+                </div>
 </div>
 
-<div class="dashboard">
-	<!-- <div class="meter meter--rpm meter--big-label"></div> -->
-	<!-- <div class="meter meter--gear"><div>1</div></div> -->
-  <div class="meter meter--speed"></div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <div class="meter meter--speed"></div> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	<div class="meter meter--speed"></div>
-</div>
 
-<div class="help">
-	Accelerate / brake : up/down arrow<br>
-	Gears +/- : left/right arrows<br>
-</div>
+    		<div class="button-holder">
+    			<a class="button">Switch Theme</a>
+    		</div>
 
-<button class="btn-volume active">♩</button>
-
-<div class="loader active">Loading...</div>
 
 
   </body>

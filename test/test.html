@@ -1,0 +1,72 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<h1>Welcome</h1>
+<h4>Voltage: <span id="voltage"></span> <span>V</span> </h5>
+<h4>Current: <span id="current"></span> <span>A</span> </h5>
+<h4>Temperature: <span id="temperature"></span> <span>°C</span> </h5>
+
+<script>
+$(document).ready(function(){
+    populateValues();
+});
+
+var allText;
+function readTextFile(file)
+{
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                allText = rawFile.responseText;
+                console.log(allText);
+            }
+        }
+    }
+    rawFile.send(null);
+}
+
+var timerID = setInterval(function() {
+populateValues();
+}, 5 * 1000); 
+
+//clearInterval(timerID);
+
+function populateValues(){
+
+readTextFile("post\values.txt");
+var values = allText.split("|");
+var v = values[1];
+var c = values[2];
+var t = values[3];
+console.log(v);
+console.log(c);
+console.log(t);
+var voltageArr = v.split("=");
+var voltage = voltageArr[1];
+var currentArr = c.split("=");
+var current = currentArr[1];
+var temperatureArr = t.split("=");
+var temperature = temperatureArr[1];
+
+console.log(voltage);
+console.log(current);
+console.log(temperature);
+
+document.getElementById("voltage").innerHTML = voltage;
+document.getElementById("current").innerHTML = current;
+document.getElementById("temperature").innerHTML = temperature;
+
+}
+
+</script>
+
+</body>
+</html>

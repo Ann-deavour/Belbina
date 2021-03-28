@@ -1,279 +1,1263 @@
-/*
-$meter-bg-color: rgb(32,32,32);
-$ring-color: #eee;
-$grad-color: #9affff;
-*/
-@import url(https://fonts.googleapis.com/css?family=Coda:400|Roboto+Mono:400,400italic);
-* {
-  box-sizing: border-box;
+
+
+/*-------------------------
+	Simple reset
+--------------------------*/
+
+
+*{
+	margin:0;
+	padding:0;
 }
 
-.dashboard {
-  display: inline-block;
-  padding: 2rem;
-  font-family: "Coda", cursive;
+
+/*-------------------------
+	General Styles
+--------------------------*/
+
+
+html{
+	background: #dbe4e6;
+	overflow:hidden;
 }
 
-.meter {
-  display: inline-block;
-  position: relative;
-  width: 20rem;
-  height: 20rem;
-  background-color: white;
-  border-radius: 50%;
-  margin: 0 0.5rem;
-  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.16), inset 0 3px 6px rgba(0, 0, 0, 0.23);
-}
-.meter:before {
-  content: "";
-  display: block;
-  position: absolute;
-  width: 107%;
-  left: -3.5%;
-  top: -3.5%;
-  bottom: -3.5%;
-  border-radius: 50%;
-  background: #333;
-  z-index: -1;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+body{
+	font:15px/1.3 Arial, sans-serif;
+	color: #4f4f4f;
+	z-index:1;
 }
 
-.label {
-  position: absolute;
-  left: 50%;
-  transform: translate3d(-50%, -50%, 0);
-  text-align: center;
-  color: #555;
-}
-.label.label-value {
-  color: #eee;
-}
-.label span {
-  text-transform: uppercase;
+a, a:visited {
+	outline:none;
+	color:#389dc1;
 }
 
-.label-unit {
-  top: 82.5%;
-}
-.label-unit div {
-  font-size: 1rem;
-}
-.meter--big-label .label-unit div {
-  font-size: 0;
+a:hover{
+	text-decoration:none;
 }
 
-.label-value {
-  top: 50%;
-  line-height: 1.25;
-}
-.label-value div, .label-value span {
-  font-size: 0;
-}
-.meter--big-label .label-value div, .meter--big-label .label-value span {
-  font-size: 2.5rem;
-}
-.label-value div {
-  font-family: "Roboto Mono", monospace;
-  font-style: italic;
-}
-.meter--big-label .label-value span {
-  font-size: 1rem;
-}
-.label-value span {
-  display: block;
-  position: absolute;
-  left: 50%;
-  transform: translate3d(-50%, 0, 0);
+section, footer, header, aside{
+	display: block;
 }
 
-.needle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: block;
-  width: 5px;
-  height: 140px;
-  transform: translate3d(-50%, 0, 0);
-  transform-origin: 50% 0;
-  background-color: #e30;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-}
-.needle:before, .needle:after {
-  display: block;
-  position: absolute;
-  content: "";
-  width: 0;
-  height: 0;
-  border-style: solid;
-}
-.needle:before {
-  left: -3px;
-  border-width: 0 3px 140px 0;
-  border-color: transparent #ff5122 transparent transparent;
-}
-.needle:after {
-  right: -3px;
-  border-width: 140px 3px 0 0;
-  border-color: #d52e00 transparent transparent transparent;
+
+.flex-container {
+  display: flex;
 }
 
-.needle-axle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: block;
-  width: 15%;
-  height: 15%;
-  transform: translate3d(-50%, -50%, 0);
-  border-radius: 50%;
-  background-color: #333;
-  color: #eee;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-  cursor: pointer;
-}
-.needle-axle:hover {
-  background-color: black;
-}
-.meter--big-label .needle-axle {
-  width: 37.5%;
-  height: 37.5%;
+
+/*-------------------------
+	The clocks
+--------------------------*/
+
+
+#voltage{
+	width:370px;
+	padding:40px;
+	margin:100px auto 60px;
+	position:relative;
 }
 
-.grad {
-  position: absolute;
-  display: inline-block;
-  font-size: 1.25rem;
-  line-height: 1;
-  color: #555;
-  transform: translate3d(-50%, -50%, 0);
-  font-weight: bold;
-}
-.grad.redzone {
-  color: #e30;
-}
-.meter--rpm .grad {
-  font-size: 2rem;
+#voltage:after{
+	content:'';
+	position:absolute;
+	width:400px;
+	height:20px;
+	border-radius:100%;
+	left:50%;
+	margin-left:-200px;
+	bottom:2px;
+	z-index:-1;
 }
 
-.grad-tick.redzone,
-.grad-tick--half.redzone,
-.grad-tick--quarter.redzone {
-  background-color: #e30;
+
+#voltage .display{
+	text-align:center;
+	padding: 40px 20px 20px;
+	border-radius:6px;
+	position:relative;
+	height: 54px;
 }
 
-.grad-tick {
-  position: absolute;
-  display: block;
-  width: 4px;
-  height: 0.75em;
-  transform-origin: 50% 0;
-  background-color: #555;
+
+/*-------------------------
+	Light color theme
+--------------------------*/
+
+
+#voltage.light{
+	background-color:#f3f3f3;
+	color:#272e38;
 }
 
-.grad-tick--half {
-  width: 2px;
-  height: 0.5em;
+#voltage.light:after{
+	box-shadow:0 4px 10px rgba(0,0,0,0.15);
 }
 
-.grad-tick--quarter {
-  width: 2px;
-  height: 0.25em;
+#voltage.light .digits div span{
+	background-color:#272e38;
+	border-color:#272e38;
 }
 
-.meter--gear {
-  width: 5rem;
-  height: 5rem;
-  margin: 0;
-  margin-left: -2rem;
-  margin-right: -2rem;
-  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.16), inset 0 3px 6px rgba(0, 0, 0, 0.23);
-}
-.meter--gear:before {
-  width: 128%;
-  height: 128%;
-  left: -14%;
-  top: -14%;
-  bottom: -14%;
-}
-.meter--gear div {
-  font-size: 2.5rem;
-  text-align: center;
-  line-height: 5rem;
-  font-family: "Roboto Mono", monospace;
-  font-style: italic;
-  font-weight: bold;
-  color: #555;
-}
-.meter--gear div.redzone {
-  color: #e30;
+#voltage.light .digits div.dots:before,
+#voltage.light .digits div.dots:after{
+	background-color:#272e38;
 }
 
-.loader {
-  display: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate3d(-50%, -50%, 0);
-  background: tomato;
-  color: white;
-  padding: 2rem;
-  text-transform: uppercase;
-}
-.loader.active {
-  display: inline-block;
+#voltage.light .alarm{
+	background:url('../img/alarm_light.jpg');
 }
 
-.btn-volume {
-  position: fixed;
-  top: 0.5rem;
-  right: 0.5rem;
-  width: 2.5rem;
-  height: 2.53rem;
-  line-height: 2rem;
-  border-radius: 50%;
-  background: transparent;
-  color: gray;
-  border: 4px solid;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-.btn-volume.active {
-  color: tomato;
-  border-color: tomato;
+#voltage.light .display{
+	background-color:#dddddd;
+	box-shadow:0 1px 1px rgba(0,0,0,0.08) inset, 0 1px 1px #fafafa;
 }
 
-body {
-  text-align: center;
-  /*	background:
-  		linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
-  		linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
-  		linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
-  		linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
-  		linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
-  		linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
-  		background-color: #131313;
-  		background-size: 20px 20px;
-  */
+
+/*-------------------------
+	Dark color theme
+--------------------------*/
+
+
+#voltage.dark{
+	background-color:#272e38;
+	color:#cacaca;
 }
 
-.head,
-.help {
-  padding: 1rem;
-  color: #888;
-  text-align: center;
-  font-style: italic;
+#voltage.dark:after{
+	box-shadow:0 4px 10px rgba(0,0,0,0.3);
 }
 
-.help {
-  border-top: 1px solid;
+#voltage.dark .digits div span{
+	background-color:#cacaca;
+	border-color:#cacaca;
 }
 
-.head {
-  border-bottom: 1px solid;
+#voltage.dark .alarm{
+	background:url('../img/alarm_dark.jpg');
 }
 
-h1 {
-  margin: 0;
-  font-weight: normal;
-  text-transform: uppercase;
+#voltage.dark .display{
+	background-color:#0f1620;
+	box-shadow:0 1px 1px rgba(0,0,0,0.08) inset, 0 1px 1px #2d3642;
+}
+
+#voltage.dark .digits div.dots:before,
+#voltage.dark .digits div.dots:after{
+	background-color:#cacaca;
+}
+
+
+/*-------------------------
+	The Digits
+--------------------------*/
+
+
+#voltage .digits div{
+	text-align:left;
+	position:relative;
+	width: 28px;
+	height:50px;
+	display:inline-block;
+	margin:0 4px;
+}
+
+#voltage .digits div span{
+	opacity:0;
+	position:absolute;
+
+	-webkit-transition:0.25s;
+	-moz-transition:0.25s;
+	transition:0.25s;
+}
+
+#voltage .digits div span:before,
+#voltage .digits div span:after{
+	content:'';
+	position:absolute;
+	width:0;
+	height:0;
+	border:5px solid transparent;
+}
+
+#voltage .digits .d1{			height:5px;width:16px;top:0;left:6px;}
+#voltage .digits .d1:before{	border-width:0 5px 5px 0;border-right-color:inherit;left:-5px;}
+#voltage .digits .d1:after{	border-width:0 0 5px 5px;border-left-color:inherit;right:-5px;}
+
+#voltage .digits .d2{			height:5px;width:16px;top:24px;left:6px;}
+#voltage .digits .d2:before{	border-width:3px 4px 2px;border-right-color:inherit;left:-8px;}
+#voltage .digits .d2:after{	border-width:3px 4px 2px;border-left-color:inherit;right:-8px;}
+
+#voltage .digits .d3{			height:5px;width:16px;top:48px;left:6px;}
+#voltage .digits .d3:before{	border-width:5px 5px 0 0;border-right-color:inherit;left:-5px;}
+#voltage .digits .d3:after{	border-width:5px 0 0 5px;border-left-color:inherit;right:-5px;}
+
+#voltage .digits .d4{			width:5px;height:14px;top:7px;left:0;}
+#voltage .digits .d4:before{	border-width:0 5px 5px 0;border-bottom-color:inherit;top:-5px;}
+#voltage .digits .d4:after{	border-width:0 0 5px 5px;border-left-color:inherit;bottom:-5px;}
+
+#voltage .digits .d5{			width:5px;height:14px;top:7px;right:0;}
+#voltage .digits .d5:before{	border-width:0 0 5px 5px;border-bottom-color:inherit;top:-5px;}
+#voltage .digits .d5:after{	border-width:5px 0 0 5px;border-top-color:inherit;bottom:-5px;}
+
+#voltage .digits .d6{			width:5px;height:14px;top:32px;left:0;}
+#voltage .digits .d6:before{	border-width:0 5px 5px 0;border-bottom-color:inherit;top:-5px;}
+#voltage .digits .d6:after{	border-width:0 0 5px 5px;border-left-color:inherit;bottom:-5px;}
+
+#voltage .digits .d7{			width:5px;height:14px;top:32px;right:0;}
+#voltage .digits .d7:before{	border-width:0 0 5px 5px;border-bottom-color:inherit;top:-5px;}
+#voltage .digits .d7:after{	border-width:5px 0 0 5px;border-top-color:inherit;bottom:-5px;}
+
+
+
+/* Minus */
+
+#voltage .digits div.minus .d2{
+	opacity:1;
+}
+
+
+/* 1 */
+
+#voltage .digits div.one .d5,
+#voltage .digits div.one .d7{
+	opacity:1;
+}
+
+/* 2 */
+
+#voltage .digits div.two .d1,
+#voltage .digits div.two .d5,
+#voltage .digits div.two .d2,
+#voltage .digits div.two .d6,
+#voltage .digits div.two .d3{
+	opacity:1;
+}
+
+/* 3 */
+
+#voltage .digits div.three .d1,
+#voltage .digits div.three .d5,
+#voltage .digits div.three .d2,
+#voltage .digits div.three .d7,
+#voltage .digits div.three .d3{
+	opacity:1;
+}
+
+/* 4 */
+
+#voltage .digits div.four .d5,
+#voltage .digits div.four .d2,
+#voltage .digits div.four .d4,
+#voltage .digits div.four .d7{
+	opacity:1;
+}
+
+/* 5 */
+
+#voltage .digits div.five .d1,
+#voltage .digits div.five .d2,
+#voltage .digits div.five .d4,
+#voltage .digits div.five .d3,
+#voltage .digits div.five .d7{
+	opacity:1;
+}
+
+/* 6 */
+
+#voltage .digits div.six .d1,
+#voltage .digits div.six .d2,
+#voltage .digits div.six .d4,
+#voltage .digits div.six .d3,
+#voltage .digits div.six .d6,
+#voltage .digits div.six .d7{
+	opacity:1;
+}
+
+
+/* 7 */
+
+#voltage .digits div.seven .d1,
+#voltage .digits div.seven .d5,
+#voltage .digits div.seven .d7{
+	opacity:1;
+}
+
+/* 8 */
+
+#voltage .digits div.eight .d1,
+#voltage .digits div.eight .d2,
+#voltage .digits div.eight .d3,
+#voltage .digits div.eight .d4,
+#voltage .digits div.eight .d5,
+#voltage .digits div.eight .d6,
+#voltage .digits div.eight .d7{
+	opacity:1;
+}
+
+/* 9 */
+
+#voltage .digits div.nine .d1,
+#voltage .digits div.nine .d2,
+#voltage .digits div.nine .d3,
+#voltage .digits div.nine .d4,
+#voltage .digits div.nine .d5,
+#voltage .digits div.nine .d7{
+	opacity:1;
+}
+
+/* 0 */
+
+#voltage .digits div.zero .d1,
+#voltage .digits div.zero .d3,
+#voltage .digits div.zero .d4,
+#voltage .digits div.zero .d5,
+#voltage .digits div.zero .d6,
+#voltage .digits div.zero .d7{
+	opacity:1;
+}
+
+
+/* The dots */
+
+#voltage .digits div.dots{
+	width:5px;
+}
+
+/* #voltage .digits div.dots:before, */
+#voltage .digits div.dots:after{
+	width:5px;
+	height:5px;
+	content:'';
+	position:absolute;
+	left:0;
+	top:14px;
+}
+
+#voltage .digits div.dots:after{
+	top:47px;
+}
+
+
+/*-------------------------
+	The Alarm
+--------------------------*/
+
+
+#voltage .alarm{
+	width:16px;
+	height:16px;
+	bottom:20px;
+	background:url('../img/alarm_light.jpg');
+	position:absolute;
+	opacity:0.2;
+}
+
+#voltage .alarm.active{
+	opacity:1;
+}
+
+
+/*-------------------------
+	Weekdays
+--------------------------*/
+
+
+#voltage .weekdays{
+	font-size:12px;
+	position:absolute;
+	width:100%;
+	top:10px;
+	left:0;
+	text-align: start;
+}
+
+
+#voltage .weekdays span{
+	opacity:0.8;
+	padding:0 10px;
+}
+
+#voltage .weekdays span.active{
+	opacity:1;
+}
+
+
+/*-------------------------
+		AM/PM
+--------------------------*/
+
+
+#voltage .ampm{
+	position:absolute;
+	bottom:20px;
+	right:20px;
+	font-size:12px;
+}
+
+
+/*-------------------------
+		Button
+--------------------------*/
+
+
+.button-holder{
+	text-align:center;
+	padding-bottom:100px;
+}
+
+a.button{
+	background-color:#f6a7b3;
+
+	background-image:-webkit-linear-gradient(top, #f6a7b3, #f0a3af);
+	background-image:-moz-linear-gradient(top, #f6a7b3, #f0a3af);
+	background-image:linear-gradient(top, #f6a7b3, #f0a3af);
+
+	border:1px solid #eb9ba7;
+	border-radius:2px;
+
+	box-shadow:0 2px 2px #ccc;
+
+	color:#fff;
+	text-decoration: none !important;
+	padding:15px 20px;
+	display:inline-block;
+	cursor:pointer;
+}
+
+a.button:hover{
+	opacity:0.9;
+}
+
+
+/*----------------------------
+	The Demo Footer
+-----------------------------*/
+
+
+footer{
+
+	width: 770px;
+	font: normal 16px Arial, Helvetica, sans-serif;
+	padding: 15px 35px;
+	position: fixed;
+	bottom: 0;
+	left: 50%;
+	margin-left: -420px;
+
+	background-color:#1f1f1f;
+
+	background-image:-webkit-linear-gradient(top, #1f1f1f, #101010);
+	background-image:-moz-linear-gradient(top, #1f1f1f, #101010);
+	background-image:linear-gradient(top, #1f1f1f, #101010);
+
+	border-radius:2px 2px 0 0;
+
+	box-shadow: 0 -1px 4px rgba(0,0,0,0.4);
+	z-index:1;
+}
+
+footer a.tz{
+	font-weight:normal;
+	font-size:16px !important;
+	text-decoration:none !important;
+	display:block;
+	margin-right: 300px;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+	color:#bfbfbf !important;
+	z-index:1;
+}
+
+footer a.tz:before{
+	content: '';
+	background: url('http://cdn.tutorialzine.com/misc/enhance/v2_footer_bg.png') no-repeat 0 -53px;
+	width: 138px;
+	height: 20px;
+	display: inline-block;
+	position: relative;
+	bottom: -3px;
+}
+
+footer .close{
+	position: absolute;
+	cursor: pointer;
+	width: 8px;
+	height: 8px;
+	background: url('http://cdn.tutorialzine.com/misc/enhance/v2_footer_bg.png') no-repeat 0 0px;
+	top:10px;
+	right:10px;
+	z-index: 3;
+}
+
+footer #tzine-actions{
+	position: absolute;
+	top: 8px;
+	width: 500px;
+	right: 50%;
+	margin-right: -650px;
+	text-align: right;
+	z-index: 2;
+}
+
+footer #tzine-actions iframe{
+	display: inline-block;
+	height: 21px;
+	width: 95px;
+	position: relative;
+	float: left;
+	margin-top: 11px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*-------------------------
+	The clocks
+--------------------------*/
+
+
+#current{
+	width:370px;
+	padding:40px;
+	margin:100px auto 60px;
+	position:relative;
+}
+
+#current:after{
+	content:'';
+	position:absolute;
+	width:400px;
+	height:20px;
+	border-radius:100%;
+	left:50%;
+	margin-left:-200px;
+	bottom:2px;
+	z-index:-1;
+}
+
+
+#current .display{
+	text-align:center;
+	padding: 40px 20px 20px;
+	border-radius:6px;
+	position:relative;
+	height: 54px;
+}
+
+
+/*-------------------------
+	Light color theme
+--------------------------*/
+
+
+#current.light{
+	background-color:#f3f3f3;
+	color:#272e38;
+}
+
+#current.light:after{
+	box-shadow:0 4px 10px rgba(0,0,0,0.15);
+}
+
+#current.light .digits div span{
+	background-color:#272e38;
+	border-color:#272e38;
+}
+
+#current.light .digits div.dots:before,
+#current.light .digits div.dots:after{
+	background-color:#272e38;
+}
+
+#current.light .alarm{
+	background:url('../img/alarm_light.jpg');
+}
+
+#current.light .display{
+	background-color:#dddddd;
+	box-shadow:0 1px 1px rgba(0,0,0,0.08) inset, 0 1px 1px #fafafa;
+}
+
+
+/*-------------------------
+	Dark color theme
+--------------------------*/
+
+
+#current.dark{
+	background-color:#272e38;
+	color:#cacaca;
+}
+
+#current.dark:after{
+	box-shadow:0 4px 10px rgba(0,0,0,0.3);
+}
+
+#current.dark .digits div span{
+	background-color:#cacaca;
+	border-color:#cacaca;
+}
+
+#current.dark .alarm{
+	background:url('../img/alarm_dark.jpg');
+}
+
+#current.dark .display{
+	background-color:#0f1620;
+	box-shadow:0 1px 1px rgba(0,0,0,0.08) inset, 0 1px 1px #2d3642;
+}
+
+#current.dark .digits div.dots:before,
+#current.dark .digits div.dots:after{
+	background-color:#cacaca;
+}
+
+
+/*-------------------------
+	The Digits
+--------------------------*/
+
+
+#current .digits div{
+	text-align:left;
+	position:relative;
+	width: 28px;
+	height:50px;
+	display:inline-block;
+	margin:0 4px;
+}
+
+#current .digits div span{
+	opacity:0;
+	position:absolute;
+
+	-webkit-transition:0.25s;
+	-moz-transition:0.25s;
+	transition:0.25s;
+}
+
+#current .digits div span:before,
+#current .digits div span:after{
+	content:'';
+	position:absolute;
+	width:0;
+	height:0;
+	border:5px solid transparent;
+}
+
+#current .digits .d1{			height:5px;width:16px;top:0;left:6px;}
+#current .digits .d1:before{	border-width:0 5px 5px 0;border-right-color:inherit;left:-5px;}
+#current .digits .d1:after{	border-width:0 0 5px 5px;border-left-color:inherit;right:-5px;}
+
+#current .digits .d2{			height:5px;width:16px;top:24px;left:6px;}
+#current .digits .d2:before{	border-width:3px 4px 2px;border-right-color:inherit;left:-8px;}
+#current .digits .d2:after{	border-width:3px 4px 2px;border-left-color:inherit;right:-8px;}
+
+#current .digits .d3{			height:5px;width:16px;top:48px;left:6px;}
+#current .digits .d3:before{	border-width:5px 5px 0 0;border-right-color:inherit;left:-5px;}
+#current .digits .d3:after{	border-width:5px 0 0 5px;border-left-color:inherit;right:-5px;}
+
+#current .digits .d4{			width:5px;height:14px;top:7px;left:0;}
+#current .digits .d4:before{	border-width:0 5px 5px 0;border-bottom-color:inherit;top:-5px;}
+#current .digits .d4:after{	border-width:0 0 5px 5px;border-left-color:inherit;bottom:-5px;}
+
+#current .digits .d5{			width:5px;height:14px;top:7px;right:0;}
+#current .digits .d5:before{	border-width:0 0 5px 5px;border-bottom-color:inherit;top:-5px;}
+#current .digits .d5:after{	border-width:5px 0 0 5px;border-top-color:inherit;bottom:-5px;}
+
+#current .digits .d6{			width:5px;height:14px;top:32px;left:0;}
+#current .digits .d6:before{	border-width:0 5px 5px 0;border-bottom-color:inherit;top:-5px;}
+#current .digits .d6:after{	border-width:0 0 5px 5px;border-left-color:inherit;bottom:-5px;}
+
+#current .digits .d7{			width:5px;height:14px;top:32px;right:0;}
+#current .digits .d7:before{	border-width:0 0 5px 5px;border-bottom-color:inherit;top:-5px;}
+#current .digits .d7:after{	border-width:5px 0 0 5px;border-top-color:inherit;bottom:-5px;}
+
+
+/* Minus */
+
+#current .digits div.minus .d2{
+	opacity:1;
+}
+
+
+/* 1 */
+
+#current .digits div.one .d5,
+#current .digits div.one .d7{
+	opacity:1;
+}
+
+/* 2 */
+
+#current .digits div.two .d1,
+#current .digits div.two .d5,
+#current .digits div.two .d2,
+#current .digits div.two .d6,
+#current .digits div.two .d3{
+	opacity:1;
+}
+
+/* 3 */
+
+#current .digits div.three .d1,
+#current .digits div.three .d5,
+#current .digits div.three .d2,
+#current .digits div.three .d7,
+#current .digits div.three .d3{
+	opacity:1;
+}
+
+/* 4 */
+
+#current .digits div.four .d5,
+#current .digits div.four .d2,
+#current .digits div.four .d4,
+#current .digits div.four .d7{
+	opacity:1;
+}
+
+/* 5 */
+
+#current .digits div.five .d1,
+#current .digits div.five .d2,
+#current .digits div.five .d4,
+#current .digits div.five .d3,
+#current .digits div.five .d7{
+	opacity:1;
+}
+
+/* 6 */
+
+#current .digits div.six .d1,
+#current .digits div.six .d2,
+#current .digits div.six .d4,
+#current .digits div.six .d3,
+#current .digits div.six .d6,
+#current .digits div.six .d7{
+	opacity:1;
+}
+
+
+/* 7 */
+
+#current .digits div.seven .d1,
+#current .digits div.seven .d5,
+#current .digits div.seven .d7{
+	opacity:1;
+}
+
+/* 8 */
+
+#current .digits div.eight .d1,
+#current .digits div.eight .d2,
+#current .digits div.eight .d3,
+#current .digits div.eight .d4,
+#current .digits div.eight .d5,
+#current .digits div.eight .d6,
+#current .digits div.eight .d7{
+	opacity:1;
+}
+
+/* 9 */
+
+#current .digits div.nine .d1,
+#current .digits div.nine .d2,
+#current .digits div.nine .d3,
+#current .digits div.nine .d4,
+#current .digits div.nine .d5,
+#current .digits div.nine .d7{
+	opacity:1;
+}
+
+/* 0 */
+
+#current .digits div.zero .d1,
+#current .digits div.zero .d3,
+#current .digits div.zero .d4,
+#current .digits div.zero .d5,
+#current .digits div.zero .d6,
+#current .digits div.zero .d7{
+	opacity:1;
+}
+
+
+/* The dots */
+
+#current .digits div.dots{
+	width:5px;
+}
+
+/* #current .digits div.dots:before, */
+#current .digits div.dots:after{
+	width:5px;
+	height:5px;
+	content:'';
+	position:absolute;
+	left:0;
+	top:14px;
+}
+
+#current .digits div.dots:after{
+	top:47px;
+}
+
+
+/*-------------------------
+	The Alarm
+--------------------------*/
+
+
+#current .alarm{
+	width:16px;
+	height:16px;
+	bottom:20px;
+	background:url('../img/alarm_light.jpg');
+	position:absolute;
+	opacity:0.2;
+}
+
+#current .alarm.active{
+	opacity:1;
+}
+
+
+/*-------------------------
+	Weekdays
+--------------------------*/
+
+
+#current .weekdays{
+	font-size:12px;
+	position:absolute;
+	width:100%;
+	top:10px;
+	left:0;
+	text-align:start;
+}
+
+
+#current .weekdays span{
+	opacity:0.8;
+	padding:0 10px;
+}
+
+#current .weekdays span.active{
+	opacity:1;
+}
+
+
+/*-------------------------
+		AM/PM
+--------------------------*/
+
+
+#current .ampm{
+	position:absolute;
+	bottom:20px;
+	right:20px;
+	font-size:12px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*-------------------------
+	The clocks
+--------------------------*/
+
+
+#temperature{
+	width:370px;
+	padding:40px;
+	margin:100px auto 60px;
+	position:relative;
+}
+
+#temperature:after{
+	content:'';
+	position:absolute;
+	width:400px;
+	height:20px;
+	border-radius:100%;
+	left:50%;
+	margin-left:-200px;
+	bottom:2px;
+	z-index:-1;
+}
+
+
+#temperature .display{
+	text-align:center;
+	padding: 40px 20px 20px;
+	border-radius:6px;
+	position:relative;
+	height: 54px;
+}
+
+
+/*-------------------------
+	Light color theme
+--------------------------*/
+
+
+#temperature.light{
+	background-color:#f3f3f3;
+	color:#272e38;
+}
+
+#temperature.light:after{
+	box-shadow:0 4px 10px rgba(0,0,0,0.15);
+}
+
+#temperature.light .digits div span{
+	background-color:#272e38;
+	border-color:#272e38;
+}
+
+#temperature.light .digits div.dots:before,
+#temperature.light .digits div.dots:after{
+	background-color:#272e38;
+}
+
+#temperature.light .alarm{
+	background:url('../img/alarm_light.jpg');
+}
+
+#temperature.light .display{
+	background-color:#dddddd;
+	box-shadow:0 1px 1px rgba(0,0,0,0.08) inset, 0 1px 1px #fafafa;
+}
+
+
+/*-------------------------
+	Dark color theme
+--------------------------*/
+
+
+#temperature.dark{
+	background-color:#272e38;
+	color:#cacaca;
+}
+
+#temperature.dark:after{
+	box-shadow:0 4px 10px rgba(0,0,0,0.3);
+}
+
+#temperature.dark .digits div span{
+	background-color:#cacaca;
+	border-color:#cacaca;
+}
+
+#temperature.dark .alarm{
+	background:url('../img/alarm_dark.jpg');
+}
+
+#temperature.dark .display{
+	background-color:#0f1620;
+	box-shadow:0 1px 1px rgba(0,0,0,0.08) inset, 0 1px 1px #2d3642;
+}
+
+#temperature.dark .digits div.dots:before,
+#temperature.dark .digits div.dots:after{
+	background-color:#cacaca;
+}
+
+
+/*-------------------------
+	The Digits
+--------------------------*/
+
+
+#temperature .digits div{
+	text-align:left;
+	position:relative;
+	width: 28px;
+	height:50px;
+	display:inline-block;
+	margin:0 4px;
+}
+
+#temperature .digits div span{
+	opacity:0;
+	position:absolute;
+
+	-webkit-transition:0.25s;
+	-moz-transition:0.25s;
+	transition:0.25s;
+}
+
+#temperature .digits div span:before,
+#temperature .digits div span:after{
+	content:'';
+	position:absolute;
+	width:0;
+	height:0;
+	border:5px solid transparent;
+}
+
+#temperature .digits .d1{			height:5px;width:16px;top:0;left:6px;}
+#temperature .digits .d1:before{	border-width:0 5px 5px 0;border-right-color:inherit;left:-5px;}
+#temperature .digits .d1:after{	border-width:0 0 5px 5px;border-left-color:inherit;right:-5px;}
+
+#temperature .digits .d2{			height:5px;width:16px;top:24px;left:6px;}
+#temperature .digits .d2:before{	border-width:3px 4px 2px;border-right-color:inherit;left:-8px;}
+#temperature .digits .d2:after{	border-width:3px 4px 2px;border-left-color:inherit;right:-8px;}
+
+#temperature .digits .d3{			height:5px;width:16px;top:48px;left:6px;}
+#temperature .digits .d3:before{	border-width:5px 5px 0 0;border-right-color:inherit;left:-5px;}
+#temperature .digits .d3:after{	border-width:5px 0 0 5px;border-left-color:inherit;right:-5px;}
+
+#temperature .digits .d4{			width:5px;height:14px;top:7px;left:0;}
+#temperature .digits .d4:before{	border-width:0 5px 5px 0;border-bottom-color:inherit;top:-5px;}
+#temperature .digits .d4:after{	border-width:0 0 5px 5px;border-left-color:inherit;bottom:-5px;}
+
+#temperature .digits .d5{			width:5px;height:14px;top:7px;right:0;}
+#temperature .digits .d5:before{	border-width:0 0 5px 5px;border-bottom-color:inherit;top:-5px;}
+#temperature .digits .d5:after{	border-width:5px 0 0 5px;border-top-color:inherit;bottom:-5px;}
+
+#temperature .digits .d6{			width:5px;height:14px;top:32px;left:0;}
+#temperature .digits .d6:before{	border-width:0 5px 5px 0;border-bottom-color:inherit;top:-5px;}
+#temperature .digits .d6:after{	border-width:0 0 5px 5px;border-left-color:inherit;bottom:-5px;}
+
+#temperature .digits .d7{			width:5px;height:14px;top:32px;right:0;}
+#temperature .digits .d7:before{	border-width:0 0 5px 5px;border-bottom-color:inherit;top:-5px;}
+#temperature .digits .d7:after{	border-width:5px 0 0 5px;border-top-color:inherit;bottom:-5px;}
+
+
+/* Minus */
+
+#temperature .digits div.minus .d2{
+	opacity:1;
+}
+
+
+/* 1 */
+
+#temperature .digits div.one .d5,
+#temperature .digits div.one .d7{
+	opacity:1;
+}
+
+/* 2 */
+
+#temperature .digits div.two .d1,
+#temperature .digits div.two .d5,
+#temperature .digits div.two .d2,
+#temperature .digits div.two .d6,
+#temperature .digits div.two .d3{
+	opacity:1;
+}
+
+/* 3 */
+
+#temperature .digits div.three .d1,
+#temperature .digits div.three .d5,
+#temperature .digits div.three .d2,
+#temperature .digits div.three .d7,
+#temperature .digits div.three .d3{
+	opacity:1;
+}
+
+/* 4 */
+
+#temperature .digits div.four .d5,
+#temperature .digits div.four .d2,
+#temperature .digits div.four .d4,
+#temperature .digits div.four .d7{
+	opacity:1;
+}
+
+/* 5 */
+
+#temperature .digits div.five .d1,
+#temperature .digits div.five .d2,
+#temperature .digits div.five .d4,
+#temperature .digits div.five .d3,
+#temperature .digits div.five .d7{
+	opacity:1;
+}
+
+/* 6 */
+
+#temperature .digits div.six .d1,
+#temperature .digits div.six .d2,
+#temperature .digits div.six .d4,
+#temperature .digits div.six .d3,
+#temperature .digits div.six .d6,
+#temperature .digits div.six .d7{
+	opacity:1;
+}
+
+
+/* 7 */
+
+#temperature .digits div.seven .d1,
+#temperature .digits div.seven .d5,
+#temperature .digits div.seven .d7{
+	opacity:1;
+}
+
+/* 8 */
+
+#temperature .digits div.eight .d1,
+#temperature .digits div.eight .d2,
+#temperature .digits div.eight .d3,
+#temperature .digits div.eight .d4,
+#temperature .digits div.eight .d5,
+#temperature .digits div.eight .d6,
+#temperature .digits div.eight .d7{
+	opacity:1;
+}
+
+/* 9 */
+
+#temperature .digits div.nine .d1,
+#temperature .digits div.nine .d2,
+#temperature .digits div.nine .d3,
+#temperature .digits div.nine .d4,
+#temperature .digits div.nine .d5,
+#temperature .digits div.nine .d7{
+	opacity:1;
+}
+
+/* 0 */
+
+#temperature .digits div.zero .d1,
+#temperature .digits div.zero .d3,
+#temperature .digits div.zero .d4,
+#temperature .digits div.zero .d5,
+#temperature .digits div.zero .d6,
+#temperature .digits div.zero .d7{
+	opacity:1;
+}
+
+
+/* The dots */
+
+#temperature .digits div.dots{
+	width:5px;
+}
+
+/* #temperature .digits div.dots:before, */
+#temperature .digits div.dots:after{
+	width:5px;
+	height:5px;
+	content:'';
+	position:absolute;
+	left:0;
+	top:14px;
+}
+
+#temperature .digits div.dots:after{
+	top:47px;
+}
+
+
+/*-------------------------
+	The Alarm
+--------------------------*/
+
+
+#temperature .alarm{
+	width:16px;
+	height:16px;
+	bottom:20px;
+	background:url('../img/alarm_light.jpg');
+	position:absolute;
+	opacity:0.2;
+}
+
+#temperature .alarm.active{
+	opacity:1;
+}
+
+
+/*-------------------------
+	Weekdays
+--------------------------*/
+
+
+#temperature .weekdays{
+	font-size:12px;
+	position:absolute;
+	width:100%;
+	top:10px;
+	left:0;
+	text-align:start;
+}
+
+
+#temperature .weekdays span{
+	opacity:0.8;
+	padding:0 10px;
+}
+
+#temperature .weekdays span.active{
+	opacity:1;
+}
+
+
+/*-------------------------
+		AM/PM
+--------------------------*/
+
+
+#temperature .ampm{
+	position:absolute;
+	bottom:20px;
+	right:20px;
+	font-size:12px;
+}
+
+
+
+
+
+
+
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .flex-container {
+    display: block;
+  }
+}
+
+
+@media only screen and (max-width: 600px) {
+  /* For mobile phones: */
+  .flex-container {
+    display: block;
+  }
 }
