@@ -20,7 +20,7 @@ html{
 	/* background: #dbe4e6; */
 	background: #781800;
 	background-image: radial-gradient(rgba(0,0,0,0) 40%, rgba(0,0,0,1) 150%);
-	overflow:hidden;
+	/* overflow:hidden; */
 }
 
 body{
@@ -1322,14 +1322,14 @@ footer #tzine-actions iframe{
 .content-flex{
 	margin: 2%;
 	padding: 3%;
-	display: flex;
+	/* display: flex; */
 	align-content: center;
+	width: 100%;
 }
 
 .content-flex > div {
   /* background-color: #f1f1f1; */
 	color: #dddddd;
-  width: 33.33%;
   margin: 10px;
   text-align: center;
   line-height: 75px;
@@ -1338,18 +1338,77 @@ footer #tzine-actions iframe{
 }
 
 
+@media only screen and (min-width: 768px) {
+	.content-flex {
+		display: flex;
+	}
+	.content-flex > div {
+		  width: 33.33%;
+	}
+}
+
 
 @media only screen and (max-width: 768px) {
   /* For mobile phones: */
+	#voltage{
+		width: 80%;
+    padding: 40px;
+		/* margin: 100px 5% 60px 5%; */
+	}
+	#current{
+		width: 80%;
+		padding: 40px;
+		/* margin: 100px 5% 60px 5%; */
+	}
+	#temperature{
+		width: 80%;
+		padding: 40px;
+		/* margin: 100px 5% 60px 5%; */
+	}
   .flex-container {
     display: block;
   }
+	.content-flex {
+		padding: 0px;
+		margin: 0px;
+	}
+	#content-box{
+		display: block;
+		width: 100%;
+		margin: 0px;
+		margin-top: 50px;
+	}
 }
 
 
 @media only screen and (max-width: 600px) {
   /* For mobile phones: */
+	#voltage{
+		width: 80%;
+		padding: 40px;
+		/* margin: 100px 5% 60px 5%; */
+	}
+	#current{
+		width: 80%;
+		padding: 40px;
+		/* margin: 100px 5% 60px 5%; */
+	}
+	#temperature{
+		width: 80%;
+		padding: 40px;
+		/* margin: 100px 5% 60px 5%; */
+	}
   .flex-container {
     display: block;
   }
+	.content-flex {
+		padding: 0px;
+		margin: 0px;
+	}
+	#content-box{
+		display: block;
+		width: 100%;
+		margin: 0px;
+		margin-top: 50px;
+	}
 }
