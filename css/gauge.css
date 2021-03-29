@@ -1412,3 +1412,31 @@ footer #tzine-actions iframe{
 		margin-top: 50px;
 	}
 }
+
+
+
+
+.copywrite-text p {
+	margin-bottom: 20px;
+	color: #fff;
+ width: 34%;
+ margin-left: 33%;
+ text-decoration:none;
+}
+
+@media only screen and (max-width:767px) {
+	.copywrite-text p {
+		font-size: 14px
+	}
+}
+
+.copywrite-text a {
+	font-weight: 100;
+	color: #fff;
+	text-decoration:none;
+}
+
+.copywrite-text a:hover,
+.copywrite-text a:focus {
+	font-size: 14px
+}
