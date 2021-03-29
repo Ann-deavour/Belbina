@@ -20,7 +20,7 @@ html{
 	/* background: #dbe4e6; */
 	background: #781800;
 	background-image: radial-gradient(rgba(0,0,0,0) 40%, rgba(0,0,0,1) 150%);
-	/* overflow:hidden; */
+	overflow-x:hidden;
 }
 
 body{
