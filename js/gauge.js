@@ -1,6 +1,7 @@
 ﻿$(document).ready(function(){
 
-    populateValues();
+    //populateValues();
+    populateValuesOffline();
 
 
 var allText;
@@ -26,7 +27,8 @@ function readTextFile(file)
 }
 
 var timerID = setInterval(function() {
-populateValues();
+//populateValues();
+populateValuesOffline();
 }, 5 * 1000);
 
 //clearInterval(timerID);
@@ -64,6 +66,17 @@ console.log(temp);
 //document.getElementById("temperature").innerHTML = temperature;
 
 }
+
+
+function populateValuesOffline(){
+  volt = "13.56";
+  curr = "-0.45";
+  temp = "32.98";
+}
+
+
+
+
 
 function savevalues(voltage,current,temperature){
 
@@ -319,7 +332,7 @@ db.collection("WirelessMonitor").doc("Monitor").set({
 
     // Switch the theme
 
-    $('a.button').click(function(){
+    $('.oval-lg').click(function(){
         voltage.toggleClass('light dark');
         current.toggleClass('light dark');
         temperature.toggleClass('light dark');
