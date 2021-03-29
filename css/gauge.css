@@ -1320,8 +1320,8 @@ footer #tzine-actions iframe{
 }
 
 .content-flex{
-	margin: 2%;
-	padding: 3%;
+	/* margin: 2%;
+	padding: 3%; */
 	/* display: flex; */
 	align-content: center;
 	width: 100%;
@@ -1414,19 +1414,23 @@ footer #tzine-actions iframe{
 }
 
 
-
+.copywrite-text{
+	width: 33.33%;
+	margin:auto;
+}
 
 .copywrite-text p {
 	margin-bottom: 20px;
 	color: #fff;
- width: 34%;
- margin-left: 33%;
  text-decoration:none;
 }
 
 @media only screen and (max-width:767px) {
 	.copywrite-text p {
 		font-size: 14px
+	}
+	.copywrite-text{
+		margin:auto;
 	}
 }
 
