@@ -27,8 +27,8 @@ function readTextFile(file)
 }
 
 var timerID = setInterval(function() {
-//populateValues();
-populateValuesOffline();
+populateValues();
+//populateValuesOffline();
 }, 5 * 1000);
 
 //clearInterval(timerID);
